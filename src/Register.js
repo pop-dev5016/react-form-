@@ -1,6 +1,6 @@
 import { useRef,useState,useEffect } from "react";
 import React from 'react'
-import { faCheck,faTimes,FaInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { faCheck,faTimes,faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
@@ -15,7 +15,7 @@ const Register = () => {
     const errRef= useRef()
 
     const [user,setUser] = useState('')
-    const [validname,setValidname] = useState(false)
+    const [validName,setValidName] = useState(false)
     const [userFocus,setUserFocus] = useState(false)
 
 
@@ -39,7 +39,7 @@ const Register = () => {
         const results = USER_REGEX.test(user)
         console.log(results)
         console.log(user)
-        setValidname(results)
+        setValidName(results)
     },[user])
 
     useEffect(()=>{
@@ -63,9 +63,15 @@ const Register = () => {
   return (
     <section>
         <p ref={errRef} className={errmsg?"errmsg":"offscreen"} aria-live="assertive">{errmsg}</p>
-        <h1>sign in</h1>
+        <h1>register</h1>
         <form>
-            <label htmlFor="username">UserName</label>
+            <label htmlFor="username">
+                UserName:
+                <FontAwesomeIcon icon={faCheck} className={validName ? "valid" : "hide"} />
+                <FontAwesomeIcon icon={faTimes} className={validName || !user ? "hide" : "invalid"} />
+                </label>
+
+
             <input
                             type="text"
                             id="username"
@@ -74,11 +80,19 @@ const Register = () => {
                             onChange={(e) => setUser(e.target.value)}
                             value={user}
                             required
-                            aria-invalid={validname ? "false" : "true"}
+                            aria-invalid={validName ? "false" : "true"}
                             aria-describedby="uidnote"
                             onFocus={() => setUserFocus(true)}
                             onBlur={() => setUserFocus(false)}
                         />
+
+
+            <p id="uidnote" className={userFocus && user && !validName ? "instructions" : "offscreen"}>
+                            <FontAwesomeIcon icon={faInfoCircle} />
+                            4 to 24 characters.<br />
+                            Must begin with a letter.<br />
+                            Letters, numbers, underscores, hyphens allowed.
+                        </p>            
 
 
 
